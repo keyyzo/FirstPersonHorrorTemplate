@@ -9,3 +9,4 @@ res://Scripts/Player/player_controller.gd
 res://Scenes/standard_door.tscn
 res://Scripts/standard_door.gd
 res://Scripts/test_dialogue_item.gd
+res://addons/qodot/game_definitions/trenchbroom_game_config.tres

@@ -12,7 +12,7 @@
 
 [node name="StandardDoorSB" type="StaticBody3D" parent="." groups=["Interactable"]]
 collision_layer = 128
-collision_mask = 2
+collision_mask = 10
 script = ExtResource("1_w2t0e")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="StandardDoorSB"]

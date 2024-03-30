@@ -13,7 +13,7 @@ mesh = SubResource("BoxMesh_2p42e")
 [node name="StaticBody3D" type="StaticBody3D" parent="." groups=["Item_PickedUp"]]
 disable_mode = 2
 collision_layer = 8
-collision_mask = 2
+collision_mask = 130
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
 shape = SubResource("ConcavePolygonShape3D_553or")
