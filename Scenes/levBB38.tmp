@@ -1,0 +1,39 @@
+[gd_scene load_steps=7 format=3 uid="uid://y7elmbrhq1mo"]
+
+[ext_resource type="Script" path="res://Scripts/level.gd" id="1_c6t2r"]
+[ext_resource type="PackedScene" uid="uid://bkvxy7qy288jh" path="res://Scenes/player_controller.tscn" id="1_djwa4"]
+[ext_resource type="PackedScene" uid="uid://b6bhp8a7b8j6m" path="res://Scenes/test_pickup_item.tscn" id="2_o6cma"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_q72fl"]
+sky_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
+ground_horizon_color = Color(0.64625, 0.65575, 0.67075, 1)
+
+[sub_resource type="Sky" id="Sky_uylem"]
+sky_material = SubResource("ProceduralSkyMaterial_q72fl")
+
+[sub_resource type="Environment" id="Environment_hed3r"]
+background_mode = 2
+sky = SubResource("Sky_uylem")
+tonemap_mode = 2
+
+[node name="Level" type="Node"]
+script = ExtResource("1_c6t2r")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_hed3r")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.866025, -0.433013, 0.25, 0, 0.5, 0.866025, -0.5, 0.75, -0.433013, 0, 0, 0)
+shadow_enabled = true
+
+[node name="Ground" type="CSGBox3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.5)
+use_collision = true
+collision_mask = 2
+size = Vector3(17, 1, 18)
+
+[node name="PlayerController" parent="." instance=ExtResource("1_djwa4")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
+
+[node name="TestPickupItem" parent="." instance=ExtResource("2_o6cma")]
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, -2.73423, 1.57353, 4.14777)

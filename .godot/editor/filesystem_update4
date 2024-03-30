@@ -1,0 +1,11 @@
+res://Scenes/level.tscn
+res://Scenes/player_controller.tscn
+res://Scenes/test_pickup_item.tscn
+res://Scenes/test_dialogue.tscn
+res://Scenes/test_dialogue_item.tscn
+res://Scripts/Components/PickupComponent.gd
+res://Scripts/global.gd
+res://Scripts/Player/player_controller.gd
+res://Scenes/standard_door.tscn
+res://Scripts/standard_door.gd
+res://Scripts/test_dialogue_item.gd

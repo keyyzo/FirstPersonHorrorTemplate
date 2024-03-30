@@ -1,0 +1,88 @@
+[gd_scene load_steps=7 format=3 uid="uid://dx1ouahlavddf"]
+
+[ext_resource type="Script" path="res://Scripts/test_dialogue_item.gd" id="1_ancx8"]
+[ext_resource type="FontFile" uid="uid://p3cb8njpkjvf" path="res://UI/Tauri-Regular.ttf" id="1_ipqac"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_rtm77"]
+vertex_color_use_as_albedo = true
+albedo_color = Color(0.0431373, 0.235294, 0.443137, 1)
+emission_enabled = true
+emission = Color(0, 0, 0.635294, 1)
+emission_energy_multiplier = 4.24
+emission_operator = 1
+
+[sub_resource type="BoxMesh" id="BoxMesh_fl1aq"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rna0p"]
+bg_color = Color(1, 1, 1, 1)
+border_width_left = 8
+border_width_top = 8
+border_width_right = 8
+border_width_bottom = 8
+border_color = Color(0, 0, 0, 1)
+border_blend = true
+corner_radius_top_left = 2
+corner_radius_top_right = 2
+corner_radius_bottom_right = 2
+corner_radius_bottom_left = 2
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_p3i8t"]
+size = Vector3(1.6, 1.2, 1.6)
+
+[node name="TestDialogueItem" type="Node3D" node_paths=PackedStringArray("canvas", "interact_label", "Detection_Area")]
+script = ExtResource("1_ancx8")
+canvas = NodePath("CanvasLayer")
+interact_label = NodePath("InteractLabel")
+Detection_Area = NodePath("DetectionArea")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(0.5, 0, 0, 0, 0.1, 0, 0, 0, 0.8, 0, 0, 0)
+material_override = SubResource("StandardMaterial3D_rtm77")
+mesh = SubResource("BoxMesh_fl1aq")
+skeleton = NodePath("../..")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="Label" type="Label" parent="CanvasLayer"]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -152.0
+offset_top = -183.0
+offset_right = 216.003
+offset_bottom = 152.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+theme_override_colors/font_color = Color(0, 0, 0, 1)
+theme_override_fonts/font = ExtResource("1_ipqac")
+theme_override_font_sizes/font_size = 24
+theme_override_styles/normal = SubResource("StyleBoxFlat_rna0p")
+text = "Hello There
+
+This is an example piece of text"
+horizontal_alignment = 1
+vertical_alignment = 1
+metadata/_edit_use_anchors_ = true
+
+[node name="DetectionArea" type="Area3D" parent="." groups=["Item_Interact"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00524139, -4.76837e-07, 0.00580096)
+collision_layer = 16
+collision_mask = 2
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="DetectionArea"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5.96046e-08, 0.1, -5.96046e-08)
+shape = SubResource("BoxShape3D_p3i8t")
+
+[node name="InteractLabel" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.476209, 0)
+billboard = 1
+text = "Press \"E\" to interact"
+font = ExtResource("1_ipqac")
+font_size = 20
+
+[connection signal="area_entered" from="DetectionArea" to="." method="_on_detection_area_area_entered"]
+[connection signal="body_entered" from="DetectionArea" to="." method="_on_detection_area_body_entered"]
+[connection signal="body_exited" from="DetectionArea" to="." method="_on_detection_area_body_exited"]

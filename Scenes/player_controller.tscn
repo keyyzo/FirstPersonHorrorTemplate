@@ -1,0 +1,47 @@
+[gd_scene load_steps=4 format=3 uid="uid://bkvxy7qy288jh"]
+
+[ext_resource type="Script" path="res://Scripts/Player/player_controller.gd" id="1_iseox"]
+[ext_resource type="Script" path="res://Scripts/Components/PickupComponent.gd" id="2_w82v5"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_70qrm"]
+
+[node name="PlayerController" type="CharacterBody3D" node_paths=PackedStringArray("PLAYER_ANIMATIONS", "CAMERA_CONTROLLER", "FRONT_RAYCAST") groups=["player"]]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+collision_layer = 2
+collision_mask = 253
+script = ExtResource("1_iseox")
+PLAYER_ANIMATIONS = NodePath("PlayerAnimations")
+CAMERA_CONTROLLER = NodePath("CameraController/PlayerCamera")
+FRONT_RAYCAST = NodePath("CameraController/PlayerCamera/MainRaycast")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("CapsuleShape3D_70qrm")
+
+[node name="CameraController" type="Node3D" parent="."]
+
+[node name="PlayerCamera" type="Camera3D" parent="CameraController"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, 0)
+fov = 70.0
+
+[node name="MainRaycast" type="RayCast3D" parent="CameraController/PlayerCamera" groups=["main_raycast"]]
+target_position = Vector3(0, 0, -10)
+collision_mask = 216
+collide_with_areas = true
+
+[node name="ItemManager" type="Node3D" parent="CameraController/PlayerCamera"]
+
+[node name="ItemPosition" type="Marker3D" parent="CameraController/PlayerCamera/ItemManager"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.695, -0.737, -2.429)
+
+[node name="PlayerAnimations" type="AnimationPlayer" parent="."]
+
+[node name="PickupComponent" type="Node" parent="." node_paths=PackedStringArray("MAIN_RAYCAST", "GROUND_RAYCAST", "PICKED_UP_POSITION")]
+script = ExtResource("2_w82v5")
+MAIN_RAYCAST = NodePath("../CameraController/PlayerCamera/MainRaycast")
+GROUND_RAYCAST = NodePath("../GroundRaycast")
+PICKED_UP_POSITION = NodePath("../CameraController/PlayerCamera/ItemManager/ItemPosition")
+
+[node name="GroundRaycast" type="RayCast3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.244563, -0.969633, 0, 0.969633, 0.244563, 0, -0.5, 0)
+target_position = Vector3(0, -3, 0)
+collision_mask = 189

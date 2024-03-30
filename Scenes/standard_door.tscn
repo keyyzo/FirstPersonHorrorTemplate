@@ -1,0 +1,35 @@
+[gd_scene load_steps=5 format=3 uid="uid://c0gdscqhijmxc"]
+
+[ext_resource type="Script" path="res://Scripts/standard_door.gd" id="1_w2t0e"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_vq8u2"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_yxd8d"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_2k05o"]
+
+[node name="StandardDoor" type="Node3D"]
+
+[node name="StandardDoorSB" type="StaticBody3D" parent="." groups=["Interactable"]]
+collision_layer = 128
+collision_mask = 2
+script = ExtResource("1_w2t0e")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StandardDoorSB"]
+transform = Transform3D(2, 0, 0, 0, 4, 0, 0, 0, 0.2, 1, 2, 0)
+shape = SubResource("BoxShape3D_vq8u2")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="StandardDoorSB"]
+transform = Transform3D(2, 0, 0, 0, 4, 0, 0, 0, 0.2, 1, 2, 0)
+mesh = SubResource("BoxMesh_yxd8d")
+
+[node name="DetectionArea" type="Area3D" parent="." groups=["Door"]]
+transform = Transform3D(2, 0, 0, 0, 4, 0, 0, 0, 5, 1, 2, 0)
+collision_layer = 128
+collision_mask = 2
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="DetectionArea"]
+shape = SubResource("BoxShape3D_2k05o")
+
+[connection signal="body_entered" from="DetectionArea" to="StandardDoorSB" method="_on_detection_area_body_entered"]
+[connection signal="body_exited" from="DetectionArea" to="StandardDoorSB" method="_on_detection_area_body_exited"]

@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://c8qck4r3i4hth"]
+
+[ext_resource type="Script" path="res://Scripts/TestDialogue.gd" id="1_hivxl"]
+
+[node name="Area3D" type="Area3D"]
+collision_layer = 16
+collision_mask = 0
+script = ExtResource("1_hivxl")
