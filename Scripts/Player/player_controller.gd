@@ -29,6 +29,10 @@ var player_rotation : Vector3
 var camera_rotation : Vector3
 var current_rotation : float
 
+# Stair check variables
+var was_on_floor_last_frame : bool = false
+var snapped_to_stairs_last_frame : bool = false
+
 # Get the gravity from the project settings to be synced with RigidBody nodes.
 var gravity: float = ProjectSettings.get_setting("physics/3d/default_gravity")
 
@@ -64,6 +68,7 @@ func _physics_process(delta: float) -> void:
 	update_camera(delta)
 	update_input()
 	update_velocity()
+	snap_down_to_stairs_check()
 	
 func update_camera(delta):
 	# Rotate camera using eular rotation
@@ -106,3 +111,20 @@ func interact():
 	if collider != null:
 		if collider.is_in_group("Interactable"):
 			collider.interact()
+			
+func snap_down_to_stairs_check():
+	var did_snap = false
+	if not is_on_floor() and velocity.y <= 0 and (was_on_floor_last_frame or snapped_to_stairs_last_frame) and $StairCheckRaycast.is_colliding():
+		var body_test_result = PhysicsTestMotionResult3D.new()
+		var params = PhysicsTestMotionParameters3D.new()
+		var max_step_down = -0.5
+		params.from = self.global_transform
+		params.motion = Vector3(0,max_step_down,0)
+		if PhysicsServer3D.body_test_motion(self.get_rid(), params, body_test_result):
+			var translate_y = body_test_result.get_travel().y
+			self.position.y += translate_y
+			apply_floor_snap()
+			did_snap = true
+			
+	was_on_floor_last_frame = is_on_floor()
+	snapped_to_stairs_last_frame = did_snap

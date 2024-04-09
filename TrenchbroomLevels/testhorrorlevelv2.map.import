@@ -1,0 +1,14 @@
+[remap]
+
+importer="qodot.map"
+type="Resource"
+uid="uid://28gso6tr85h5"
+path="res://.godot/imported/testhorrorlevelv2.map-0fd714ba5454124a1018e14bb13afbe1.tres"
+
+[deps]
+
+source_file="res://TrenchbroomLevels/testhorrorlevelv2.map"
+dest_files=["res://.godot/imported/testhorrorlevelv2.map-0fd714ba5454124a1018e14bb13afbe1.tres"]
+
+[params]
+

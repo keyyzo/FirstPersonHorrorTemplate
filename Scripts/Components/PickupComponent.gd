@@ -88,7 +88,7 @@ func drop_object_check() -> bool:
 			
 	elif ground_collider != null:
 		print("The item can be dropped on the ground here")
-		if ground_collider.is_in_group("Ground"):
+		if ground_collider.is_in_group("Ground") and GROUND_RAYCAST.get_collision_normal() == Vector3.UP:
 			var pos = GROUND_RAYCAST.get_collision_point()
 			var height_offset = ground_collider.global_transform.basis.y.length() / 2
 			drop_object_position = Vector3(pos.x,pos.y + height_offset,pos.z)

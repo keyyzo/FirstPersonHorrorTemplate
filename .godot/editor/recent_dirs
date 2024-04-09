@@ -1,5 +1,12 @@
+res://Art/Materials
+res://Textures/Prototype/PNG/Orange
+res://Textures/Prototype/PNG/Light
+res://Textures/Prototype/PNG/Green
+res://Textures/Prototype/PNG/Dark
+res://Scenes
+D:/MyGodotGames/FirstPersonHorrorTemplate/TrenchbroomLevels
+D:/TrenchBroom/games/Qodot
 D:/TrenchBroom/games
 res://Scripts
-res://Scenes
 res://Scripts/Components
 res://Scripts/Player
