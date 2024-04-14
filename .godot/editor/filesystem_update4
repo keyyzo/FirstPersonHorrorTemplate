@@ -1,8 +1,11 @@
-res://Scenes/level.tscn
+res://Scenes/standard_door.tscn
 res://addons/qodot/game_definitions/fgd/solid_classes/detail_solid_class.tres
-res://Scenes/house.tscn
+res://Art/Materials/wall_prototype.tres
+res://Scripts/standard_door.gd
+res://Scenes/level.tscn
 res://Scenes/player_controller.tscn
 res://Scenes/test_pickup_item.tscn
 res://Scenes/test_dialogue_item.tscn
-res://Scenes/standard_door.tscn
+res://Scenes/house.tscn
+res://Scripts/Player/FootstepManager.gd
 res://Scripts/Player/player_controller.gd

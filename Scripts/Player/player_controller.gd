@@ -4,7 +4,8 @@ extends CharacterBody3D
 
 # General Character variables 
 
-@export var PLAYER_SPEED : float = 5.0
+@export var BASE_PLAYER_SPEED : float = 3.0
+@export var SPRINT_PLAYER_SPEED : float = 5.0
 @export var PLAYER_ACCELERATION : float = 0.1
 @export var PLAYER_DECELERATION : float = 0.25
 
@@ -33,6 +34,14 @@ var current_rotation : float
 var was_on_floor_last_frame : bool = false
 var snapped_to_stairs_last_frame : bool = false
 
+# Footstep and Headbob variables
+@export var BOB_FREQ : float = 2.4
+@export var BOB_AMP : float = 0.08
+const camera_offset : float = 0.8
+var t_bob : float = 0.0
+var can_play : bool = true
+signal foostep
+
 # Get the gravity from the project settings to be synced with RigidBody nodes.
 var gravity: float = ProjectSettings.get_setting("physics/3d/default_gravity")
 
@@ -49,7 +58,7 @@ func _unhandled_input(event: InputEvent) -> void:
 func _ready() -> void:
 	Input.mouse_mode = Input.MOUSE_MODE_CAPTURED
 	
-	current_player_speed = PLAYER_SPEED
+	current_player_speed = BASE_PLAYER_SPEED
 	
 	Global.Player = self
 
@@ -64,9 +73,21 @@ func _physics_process(delta: float) -> void:
 
 	if Input.is_action_just_pressed("interact_button"):
 		interact()
+		
+	if Input.is_action_pressed("sprint"):
+		current_player_speed = SPRINT_PLAYER_SPEED
+	
+	if Input.is_action_just_released("sprint"):
+		current_player_speed = BASE_PLAYER_SPEED
 
 	update_camera(delta)
 	update_input()
+	
+	# Headbob
+	t_bob += delta * velocity.length() * float(is_on_floor())
+	CAMERA_CONTROLLER.transform.origin = update_headbob(t_bob)
+	
+	rotate_step_up_separation_ray()
 	update_velocity()
 	snap_down_to_stairs_check()
 	
@@ -103,6 +124,29 @@ func update_input():
 		velocity.x = vel.normalized().x * temp
 		velocity.z = vel.normalized().y * temp
 		
+	
+	
+func update_headbob(time) -> Vector3:
+	var pos = Vector3.ZERO
+	pos.y = (sin(time*BOB_FREQ) * BOB_AMP) + camera_offset
+	pos.x = cos(time*BOB_FREQ/2) *  BOB_AMP
+	
+	var low_pos = BOB_AMP - 0.05
+	
+	#Check if we have reached a high point so we restart can_play
+	
+	if pos.y > (-low_pos + camera_offset):
+		can_play = true
+		
+	# check if the head position has reached a low point then turn off can play to avoid
+	# multiple spam of the emit signal
+	
+	if pos.y < (-low_pos + camera_offset) and can_play:
+		can_play = false
+		emit_signal("foostep")
+		
+	return pos
+		
 func update_velocity():
 	move_and_slide()
 	
@@ -117,7 +161,7 @@ func snap_down_to_stairs_check():
 	if not is_on_floor() and velocity.y <= 0 and (was_on_floor_last_frame or snapped_to_stairs_last_frame) and $StairCheckRaycast.is_colliding():
 		var body_test_result = PhysicsTestMotionResult3D.new()
 		var params = PhysicsTestMotionParameters3D.new()
-		var max_step_down = -0.5
+		var max_step_down = -0.4
 		params.from = self.global_transform
 		params.motion = Vector3(0,max_step_down,0)
 		if PhysicsServer3D.body_test_motion(self.get_rid(), params, body_test_result):
@@ -128,3 +172,11 @@ func snap_down_to_stairs_check():
 			
 	was_on_floor_last_frame = is_on_floor()
 	snapped_to_stairs_last_frame = did_snap
+	
+@onready var initial_separation_ray_dist = abs($SeperationRayStepUp.position.z)
+
+func rotate_step_up_separation_ray():
+	var xz_vel = velocity * Vector3(1,0,1)
+	var xz_f_ray_pos = xz_vel.normalized() * initial_separation_ray_dist
+	$SeperationRayStepUp.global_position.x = self.global_position.x + xz_f_ray_pos.x
+	$SeperationRayStepUp.global_position.z = self.global_position.z + xz_f_ray_pos.z

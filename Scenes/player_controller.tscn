@@ -1,26 +1,33 @@
-[gd_scene load_steps=5 format=3 uid="uid://bkvxy7qy288jh"]
+[gd_scene load_steps=10 format=3 uid="uid://bkvxy7qy288jh"]
 
 [ext_resource type="Script" path="res://Scripts/Player/player_controller.gd" id="1_iseox"]
 [ext_resource type="Script" path="res://Scripts/Components/PickupComponent.gd" id="2_w82v5"]
+[ext_resource type="Script" path="res://Scripts/Player/FootstepManager.gd" id="3_dtiki"]
+[ext_resource type="AudioStream" uid="uid://dmbcl5n0w4h3i" path="res://SFX/wood_footstep_1.mp3" id="4_mcfsx"]
+[ext_resource type="AudioStream" uid="uid://dqpatccyuehx" path="res://SFX/wood_footstep_2.mp3" id="5_vw4ct"]
+[ext_resource type="AudioStream" uid="uid://c2dh2np4y63oc" path="res://SFX/wood_footstep_3.mp3" id="6_7g6xn"]
+[ext_resource type="AudioStream" uid="uid://bxghbykdmvgam" path="res://SFX/wood_footstep_4.mp3" id="7_a6iy2"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_70qrm"]
 
 [sub_resource type="SeparationRayShape3D" id="SeparationRayShape3D_ktv64"]
-length = 0.5
+length = 0.4
 
 [node name="PlayerController" type="CharacterBody3D" node_paths=PackedStringArray("PLAYER_ANIMATIONS", "CAMERA_CONTROLLER", "FRONT_RAYCAST") groups=["player"]]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 collision_layer = 2
-collision_mask = 253
+collision_mask = 381
 script = ExtResource("1_iseox")
 PLAYER_ANIMATIONS = NodePath("PlayerAnimations")
 CAMERA_CONTROLLER = NodePath("CameraController/PlayerCamera")
 FRONT_RAYCAST = NodePath("CameraController/PlayerCamera/MainRaycast")
+BOB_FREQ = 2.0
+BOB_AMP = 0.05
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("CapsuleShape3D_70qrm")
 
-[node name="CollisionShape3D2" type="CollisionShape3D" parent="."]
+[node name="SeperationRayStepUp" type="CollisionShape3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, -1, 0, 1, -4.37114e-08, 0, -0.5, -0.6)
 shape = SubResource("SeparationRayShape3D_ktv64")
 
@@ -56,3 +63,11 @@ collision_mask = 189
 [node name="StairCheckRaycast" type="RayCast3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
 target_position = Vector3(0, -0.5, 0)
+
+[node name="FootstepManager" type="Node" parent="." node_paths=PackedStringArray("ground_pos")]
+script = ExtResource("3_dtiki")
+footstep_sounds_mp3 = Array[AudioStreamMP3]([ExtResource("4_mcfsx"), ExtResource("5_vw4ct"), ExtResource("6_7g6xn"), ExtResource("7_a6iy2")])
+ground_pos = NodePath("../GroundPos")
+
+[node name="GroundPos" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)

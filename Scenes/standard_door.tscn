@@ -1,8 +1,15 @@
-[gd_scene load_steps=5 format=3 uid="uid://c0gdscqhijmxc"]
+[gd_scene load_steps=9 format=3 uid="uid://c0gdscqhijmxc"]
 
 [ext_resource type="Script" path="res://Scripts/standard_door.gd" id="1_w2t0e"]
+[ext_resource type="Texture2D" uid="uid://db5yjkme6ew7f" path="res://Textures/PSX/png/Door_01_White.png" id="2_6avgx"]
+[ext_resource type="AudioStream" uid="uid://dvba7pvkbnbx" path="res://SFX/door_open_1.mp3" id="2_cawlf"]
+[ext_resource type="AudioStream" uid="uid://dmtaaj1cleviw" path="res://SFX/door_open_2.mp3" id="3_iga4x"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_vq8u2"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7i6tp"]
+albedo_texture = ExtResource("2_6avgx")
+uv1_scale = Vector3(2.945, 1.995, 1.72)
 
 [sub_resource type="BoxMesh" id="BoxMesh_yxd8d"]
 
@@ -10,26 +17,31 @@
 
 [node name="StandardDoor" type="Node3D"]
 
-[node name="StandardDoorSB" type="StaticBody3D" parent="." groups=["Interactable"]]
-collision_layer = 128
+[node name="StandardDoorSB" type="StaticBody3D" parent="." node_paths=PackedStringArray("AUDIO_PLAYER") groups=["Interactable"]]
+collision_layer = 384
 collision_mask = 10
 script = ExtResource("1_w2t0e")
+AUDIO_PLAYER = NodePath("../AudioStreamPlayer3D")
+door_open_sounds_mp3 = Array[AudioStreamMP3]([ExtResource("2_cawlf"), ExtResource("3_iga4x")])
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="StandardDoorSB"]
+[node name="DoorCollider" type="CollisionShape3D" parent="StandardDoorSB"]
 transform = Transform3D(2, 0, 0, 0, 4, 0, 0, 0, 0.2, 1, 2, 0)
 shape = SubResource("BoxShape3D_vq8u2")
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="StandardDoorSB"]
 transform = Transform3D(2, 0, 0, 0, 4, 0, 0, 0, 0.2, 1, 2, 0)
+material_override = SubResource("StandardMaterial3D_7i6tp")
 mesh = SubResource("BoxMesh_yxd8d")
 
 [node name="DetectionArea" type="Area3D" parent="." groups=["Door"]]
-transform = Transform3D(2, 0, 0, 0, 4, 0, 0, 0, 5, 1, 2, 0)
+transform = Transform3D(2, 0, 0, 0, 4, 0, 0, 0, 6, 1, 2, 0)
 collision_layer = 128
 collision_mask = 2
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="DetectionArea"]
 shape = SubResource("BoxShape3D_2k05o")
+
+[node name="AudioStreamPlayer3D" type="AudioStreamPlayer3D" parent="."]
 
 [connection signal="body_entered" from="DetectionArea" to="StandardDoorSB" method="_on_detection_area_body_entered"]
 [connection signal="body_exited" from="DetectionArea" to="StandardDoorSB" method="_on_detection_area_body_exited"]

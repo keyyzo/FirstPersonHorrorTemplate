@@ -1,3 +1,8 @@
+res://Textures/PSX/256x256/Brick
+res://Textures/PSX/png
+res://Textures/PSX/256x256/Wood
+res://SFX
+res://Scripts/Player
 res://Art/Materials
 res://Textures/Prototype/PNG/Orange
 res://Textures/Prototype/PNG/Light
@@ -9,4 +14,3 @@ D:/TrenchBroom/games/Qodot
 D:/TrenchBroom/games
 res://Scripts
 res://Scripts/Components
-res://Scripts/Player

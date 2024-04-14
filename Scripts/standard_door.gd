@@ -8,6 +8,9 @@ extends StaticBody3D
 @export var KEY_NEEDED : String
 var in_animation : bool = false
 
+@export var AUDIO_PLAYER : AudioStreamPlayer3D
+@export var door_open_sounds_mp3 : Array[AudioStreamMP3]
+
 var player_at_door : bool = false
 
 var tween
@@ -41,6 +44,8 @@ func interact():
 				open_door()
 			elif IS_OPEN and !in_animation:
 				close_door()
+				await get_tree().create_timer(0.5).timeout
+				set_collision_layer_value(9, true)
 	
 func open_door():
 	tween.tween_property(self, "rotation_degrees", Vector3(0,rotation_degrees.y, 0), 0.25).set_trans(Tween.TRANS_LINEAR).set_ease(Tween.EASE_IN_OUT)
@@ -49,7 +54,12 @@ func open_door():
 	#tween.parallel().tween_property($MeshInstance3D, "rotation_degrees", Vector3(0,rotation_degrees.y + 90, 0), 0.25).set_trans(Tween.TRANS_LINEAR).set_ease(Tween.EASE_IN_OUT)
 	in_animation = true
 	tween.play()
+	play_open_sound()
+	set_collision_layer_value(9, false)
 	tween.connect("finished", on_tween_finished)
+	#get_tree().create_timer(3.0).timeout
+	
+	
 	
 func close_door():
 	tween.tween_property(self, "rotation_degrees", Vector3(0,rotation_degrees.y, 0), 0.25).set_trans(Tween.TRANS_LINEAR).set_ease(Tween.EASE_IN_OUT)
@@ -60,6 +70,12 @@ func close_door():
 	tween.play()
 	tween.connect("finished", on_tween_finished)
 	
+
+func play_open_sound():
+	var random_index : int = randi_range(0,door_open_sounds_mp3.size() - 1)
+	AUDIO_PLAYER.stream = door_open_sounds_mp3[random_index]
+	AUDIO_PLAYER.pitch_scale = randf_range(0.8,1.2)
+	AUDIO_PLAYER.play()
 
 
 func _on_detection_area_body_entered(body: Node3D) -> void:
